@@ -1,6 +1,8 @@
+import { Buttom } from '@components/Buttom';
+import { Container, Title } from './styles';
 import { HeaderHome } from '@components/HeaderHome';
-import { Container } from './styles';
 import { PercentHome } from '@components/PercentHome';
+import { DailyMeals } from '@components/DailyMeals';
 
 export function Diet() {
 
@@ -12,6 +14,13 @@ export function Diet() {
      <PercentHome
       percent={percent}
     />
+    <Title>
+      Refeições
+    </Title>
+    <Buttom
+      title='Nova Refeição'
+    />
+    <DailyMeals/>
     </Container>
   );
 }

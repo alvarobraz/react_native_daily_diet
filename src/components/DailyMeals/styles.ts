@@ -1,17 +1,19 @@
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
+  width: 86%;
   background-color: ${({ theme }) => theme.COLORS.WHITE};
-  align-items: center;
-  justify-content: center;
+  text-align: left;
+  justify-content: flex-start;
 `;
 
-export const Title = styled.Text`
-  width: 100%;
-  padding: 30px 24px 5px 24px;
+export const DateMeal = styled.Text`
+  /* background-color: #333; */
+  width: auto;
+  padding: 10px 14px 5px 3px;
   text-align: left;
   justify-content: flex-start;
   font-size: ${({ theme }) => theme.FONT_SIZE.SM}px;
-  font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
+  font-family: ${({ theme }) => theme.FONT_FAMILY.BOLD};
   color: ${({ theme }) => theme.COLORS.GRAY_1};
 `;
