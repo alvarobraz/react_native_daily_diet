@@ -8,7 +8,7 @@ export const Container = styled.View`
 
 export const Title = styled.Text`
   width: 100%;
-  padding: 30px 24px 5px 24px;
+  padding: 30px 30px 5px 30px;
   text-align: left;
   justify-content: flex-start;
   font-size: ${({ theme }) => theme.FONT_SIZE.SM}px;

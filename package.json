@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@expo-google-fonts/nunito": "^0.2.3",
+    "@react-native-masked-view/masked-view": "^0.2.9",
+    "@types/uuid": "^9.0.3",
     "expo": "~49.0.8",
     "expo-app-loading": "^2.1.1",
     "expo-font": "~11.4.0",
@@ -19,7 +21,8 @@
     "react-native": "0.72.4",
     "react-native-svg": "^13.13.0",
     "styled-components": "^6.0.7",
-    "styled-components-react-native": "^1.0.0"
+    "styled-components-react-native": "^1.0.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -1,12 +1,23 @@
+import { StatusTypeStyleProps } from "@components/StatusMeal/styles";
+import { Pressable, PressableProps } from 'react-native';
 import { Container, DateMeal } from "./styles";
+import { BoxInfoMeal } from "@components/BoxInfoMeal";
 
-export function DailyMeals() {
+type Props = PressableProps & {
+	hour: string;
+	name: string;
+	isInsideTheDiet: boolean;
+}
+
+export function DailyMeals({ hour, name, isInsideTheDiet } : Props) {
   return (
+
     <Container>
-      <DateMeal>
-        07.09.2023
-      </DateMeal>
-      
+      <BoxInfoMeal
+        hour={hour}
+        name={name}
+        isInsideTheDiet={isInsideTheDiet}
+      />
     </Container>    
   )
 }
