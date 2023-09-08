@@ -15,6 +15,10 @@ export function Diet() {
     navigation.navigate('statistics')
   }
 
+  function handleButton() {
+    navigation.navigate('new')
+  }
+
   const percent = 90.86
 
   type MealStorageDTO = {
@@ -78,6 +82,7 @@ export function Diet() {
     </Title>
     <Buttom
       title='Nova Refeição'
+      onPress={handleButton}
     />
      <SectionList
         sections={ dataMeal }

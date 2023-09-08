@@ -6,13 +6,14 @@ import { ButtonIcon } from "@components/ButtonIcon";
 type Props = TouchableOpacityProps & {
   title: string;
   type?: ButtonTypeStyleProps;
+  handleButton?: () => void;
 }
 
-export function Buttom({ title, type = 'PRIMARY', ...rest }: Props) {
+export function Buttom({ title, type = 'PRIMARY', handleButton, ...rest }: Props) {
   return (
-    <Container type={type} {...rest}>
+    <Container onPress={handleButton} type={type} {...rest}>
       <ButtonIcon
-        icon="add" 
+        icon="add"
       />
       <Title type={type}>
        {title}
