@@ -1,21 +1,30 @@
-import { AccessButton, AccessIcon, BoxPercentNumber, Container, Subtitle, Title } from './styles';
+import { AccessButton, AccessIcon, BoxPercentNumber, Container, Subtitle, Title, WidthBox } from './styles';
 
 type Props = {
-  percent: number
+  percent: number;
+  name: string;
+  icon?: boolean;
+  type: WidthBox;
+  status?: boolean
 }
 
-export function PercentHome({ percent }: Props) {
+export function PercentHome({ percent, name, icon, type, status }: Props) {
   return (
-    <Container>
-      <AccessButton>
-        <AccessIcon />
-      </AccessButton>
-      <BoxPercentNumber>
+    <Container type={type} status={status}>
+      {
+        icon ?
+        <AccessButton>
+          <AccessIcon />
+        </AccessButton>
+        :
+        null
+      }
+      <BoxPercentNumber type={type}>
           <Title>
             {percent}
           </Title>
           <Subtitle>
-            das refeições dentro da dieta
+            {name}
           </Subtitle>
         </BoxPercentNumber>
     </Container>

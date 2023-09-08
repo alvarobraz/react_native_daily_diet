@@ -1,40 +1,29 @@
 import styled from 'styled-components/native';
-import { ArrowUpRight } from "phosphor-react-native/";
+import { ArrowLeft } from "phosphor-react-native/";
 
-export type WidthBox = 1 | 2 | 3;
-
-
-type Props = {
-  type: WidthBox;
-  status?: boolean
-}
-
-export const Container = styled.View<Props>`
+export const Container = styled.View`
   flex-direction: column;
-  width: ${({ type }) => type === 1 ? '100%' : '127px'};
-  height: 102px;
+  width: 100%;
+  height: 168px;
   border-radius: 8px;
-  background-color: ${({ theme, status }) => status === false ? theme.COLORS.RED_LIGHT : theme.COLORS.GREEN_LIGHT};
+  background-color: ${({ theme }) => theme.COLORS.GREEN_LIGHT};
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
-  margin-left: ${({ type }) => type === 2 ? '0px' : '0px'};
-  margin-right: ${({ type }) => type === 2 ? '0px' : '0px'};
 `;
 
 export const AccessButton = styled.TouchableOpacity`
   width: 95%;
   justify-content: flex-start; 
-  align-items: flex-end;
+  align-items: flex-start;
 `;
 
-export const AccessIcon = styled(ArrowUpRight).attrs(({ theme }) => ({
+export const AccessIcon = styled(ArrowLeft).attrs(({ theme }) => ({
   size: 24,
   color: theme.COLORS.GREEN_DARK
 }))``;
 
-export const BoxPercentNumber = styled.View<Props>`
-  width: ${({ type }) => type === 1 ? '86%' : '100%'};
+export const BoxPercentNumber = styled.View`
+  width: 95%;
   align-items: center;
   justify-content: center;
 `;

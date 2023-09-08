@@ -1,5 +1,5 @@
 
-import { Status, StatusTypeStyleProps } from './styles';
+import { Status } from './styles';
 
 type Props = {
   type?: boolean

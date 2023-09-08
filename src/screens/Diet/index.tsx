@@ -60,7 +60,10 @@ export function Diet() {
     <Container>
      <HeaderHome />
      <PercentHome
+      type={1}
       percent={percent}
+      name="das refeições dentro da dieta"
+      icon={true}
     />
     <Title>
       Refeições

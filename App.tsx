@@ -6,6 +6,7 @@ import theme from './src/@theme';
 
 import { Diet } from "./src/screens/Diet";
 import { Loading } from '@components/Loading';
+import { Statistics } from '@screens/Statistics';
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Nunito_400Regular, Nunito_700Bold });
@@ -17,7 +18,7 @@ export default function App() {
           backgroundColor="transparent"
           translucent
         />
-      { fontsLoaded ? <Diet/> : <Loading /> }
+      { fontsLoaded ? <Statistics/> : <Loading /> }
     </ThemeProvider>
   );
 }
