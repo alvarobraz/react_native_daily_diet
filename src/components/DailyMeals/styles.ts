@@ -5,13 +5,11 @@ type ContainerProps = {
 }
 
 export const Container = styled.View`
-  width: 100%;
+  width: 99%;
   background-color: ${({ theme }) => theme.COLORS.WHITE};
   text-align: left;
   justify-content: flex-start;
   flex-direction: column;
-  padding-left: 30px;
-  padding-right: 30px;
 `;
 
 export const DateMeal = styled.Text`

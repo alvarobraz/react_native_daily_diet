@@ -15,6 +15,7 @@ export const AccessButton = styled.TouchableOpacity`
   width: 95%;
   justify-content: flex-start; 
   align-items: flex-start;
+  padding-left: 20px;
 `;
 
 export const AccessIcon = styled(ArrowLeft).attrs(({ theme }) => ({
