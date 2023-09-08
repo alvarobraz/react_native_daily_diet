@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native' 
 import { ScrollView } from "react-native";
 import { HeaderNew } from "@components/New/HeaderNew";
@@ -6,6 +7,18 @@ import { Input } from '@components/App/Input';
 import { ButtomMeal } from '@components/App/ButtomMeal';
 import { Buttom } from '@components/App/Buttom';
 
+type MealStorageDTO = {
+  name: string;
+  description: string;
+  date: string;
+  time: string;
+  isInsideTheDiet: boolean;
+}
+
+type MealsSectionDTO = {
+  title: string;
+  data: MealStorageDTO[];
+}
 
 export function New() {
 
@@ -15,6 +28,55 @@ export function New() {
     navigation.goBack()
   }
 
+  const [mealName, setMealName] = useState('');
+  const [mealDescription, setMealDescription] = useState('');
+  const [mealDate, setMealDate] = useState('');
+  const [mealTime, setMealTime] = useState('');
+  const [isInsideTheDiet, setIsInsideTheDiet] = useState<boolean>();
+  const [Meals, setMeals] = useState<MealsSectionDTO[]>([]);
+  
+  function handleIsInsideTheDiet(status: boolean) {
+    status ? setIsInsideTheDiet(true) : setIsInsideTheDiet(false)
+  }
+
+  function handleRegisterNewMeal() {
+    if (
+      mealName && 
+      mealDescription && 
+      mealDate && 
+      mealTime && 
+      (isInsideTheDiet === true || isInsideTheDiet === false) 
+    ) {
+
+      const newMeal = {
+        name: mealName,
+        description: mealDescription,
+        date: mealDate,
+        time: mealTime,
+        isInsideTheDiet: isInsideTheDiet, 
+      };
+
+      setMeals((prevMeals) => [
+        ...prevMeals,
+        {
+          title: mealDate,
+          data: [newMeal],
+        },
+      ]);
+
+      
+
+      setMealName('');
+      setMealDescription('');
+      setMealDate('');
+      setMealTime('');
+    }
+  }
+  
+  // useEffect(()=>{
+  // },[])
+
+  console.log(Meals)
 
   return (
     <Container>
@@ -29,14 +91,17 @@ export function New() {
           </Title>
           <Input 
             placeholder="Nome da refeição"
-            onChangeText={()=>{}}
+            value={mealName}
+            onChangeText={(text) => setMealName(text)}
           />
           <Title>
             Descrição
           </Title>
           <Input 
             placeholder="Descrição da refeição"
-            onChangeText={()=>{}}
+            value={mealDescription}
+            onChangeText={(text) => setMealDescription(text)}
+            multiline={true}
             type='TEXTAREA'
           />
         </BoxTopInput>
@@ -47,7 +112,8 @@ export function New() {
             </Title>
             <Input 
               placeholder="Data"
-              onChangeText={()=>{}}
+              value={mealDate}
+              onChangeText={(text) => setMealDate(text)}
             />
           </HalfInput>
           <HalfInput>
@@ -56,7 +122,8 @@ export function New() {
             </Title>
             <Input 
               placeholder="Hora"
-              onChangeText={()=>{}}
+              value={mealTime}
+              onChangeText={(text) => setMealTime(text)}
             />
           </HalfInput>
         </BoxHalfInput>
@@ -72,12 +139,14 @@ export function New() {
             <ButtomMeal
               title='Sim'
               typeIcon='TERTIARY'
+              onPress={()=>handleIsInsideTheDiet(true)}
             />
           </HalfInput>
           <HalfInput>
           <ButtomMeal
               title='Não'
               typeIcon='QUARTARY'
+              onPress={()=>handleIsInsideTheDiet(false)}
             />
           </HalfInput>
         </BoxHalfInput>
@@ -85,6 +154,7 @@ export function New() {
           <Buttom
           title='Cadastrar refeição'
           icon={false}
+          onPress={handleRegisterNewMeal}
           />
         </BoxButtom>
        </ScrollView>
