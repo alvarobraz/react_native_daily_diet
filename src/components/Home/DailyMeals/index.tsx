@@ -1,7 +1,7 @@
-import { StatusTypeStyleProps } from "@components/StatusMeal/styles";
 import { Pressable, PressableProps } from 'react-native';
 import { Container, DateMeal } from "./styles";
-import { BoxInfoMeal } from "@components/BoxInfoMeal";
+import { BoxInfoMeal } from "@components/Home/BoxInfoMeal";
+import { StatusTypeStyleProps } from "@components/Home/StatusMeal/styles";
 
 type Props = PressableProps & {
 	hour: string;

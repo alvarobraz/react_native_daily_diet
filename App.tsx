@@ -4,7 +4,7 @@ import { useFonts, Nunito_400Regular, Nunito_700Bold } from '@expo-google-fonts/
 
 import theme from './src/@theme';
 
-import { Loading } from '@components/Loading';
+import { Loading } from '@components/App/Loading';
 
 import { Routes } from './src/routes';
 import { New } from '@screens/New';

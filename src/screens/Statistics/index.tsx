@@ -1,10 +1,8 @@
 import { useNavigation } from '@react-navigation/native'  
 import { ScrollView } from "react-native";
-import { HeaderStatistics } from "@components/HeaderStatistics";
+import { HeaderStatistics } from "@components/Statistics/HeaderStatistics";
+import { PercentHome } from "@components/App/PercentHome";
 import { BoxStatistics, Container, Title } from "./styles";
-import { PercentHome } from "@components/PercentHome";
-
-
 
 export function Statistics() {
 

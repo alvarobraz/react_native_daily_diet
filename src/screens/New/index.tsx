@@ -1,8 +1,10 @@
 import { useNavigation } from '@react-navigation/native' 
 import { ScrollView } from "react-native";
-import { HeaderNew } from "@components/HeaderNew";
-import { BoxHalfInput, BoxTopInput, Container, HalfInput, Title } from "./styles";
-import { Input } from '@components/Input';
+import { HeaderNew } from "@components/New/HeaderNew";
+import { BoxHalfInput, BoxTopInput, Container, HalfInput, Title, BoxButtom } from "./styles";
+import { Input } from '@components/App/Input';
+import { ButtomMeal } from '@components/App/ButtomMeal';
+import { Buttom } from '@components/App/Buttom';
 
 
 export function New() {
@@ -67,18 +69,24 @@ export function New() {
         
         <BoxHalfInput>
           <HalfInput>
-            <Input 
-              placeholder="Data"
-              onChangeText={()=>{}}
+            <ButtomMeal
+              title='Sim'
+              typeIcon='TERTIARY'
             />
           </HalfInput>
           <HalfInput>
-            <Input 
-              placeholder="Hora"
-              onChangeText={()=>{}}
+          <ButtomMeal
+              title='Não'
+              typeIcon='QUARTARY'
             />
           </HalfInput>
         </BoxHalfInput>
+        <BoxButtom>
+          <Buttom
+          title='Cadastrar refeição'
+          icon={false}
+          />
+        </BoxButtom>
        </ScrollView>
     </Container>
   )

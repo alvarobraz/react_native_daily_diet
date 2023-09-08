@@ -1,6 +1,7 @@
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
+  flex: 1;
   background-color: ${({ theme }) => theme.COLORS.WHITE};
   align-items: center;
   justify-content: center;
@@ -42,6 +43,17 @@ export const HalfInput = styled.View`
   justify-content: flex-start;
   /* padding-left: 20px; */
   padding-right: 20px;
+`;
+
+export const BoxButtom= styled.View`
+  width: 100%;
+  height: 100px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-bottom: 20px;
 `;
 
 
