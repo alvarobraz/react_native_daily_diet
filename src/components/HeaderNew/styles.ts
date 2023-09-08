@@ -8,6 +8,7 @@ export const Container = styled.View`
   background-color: ${({ theme }) => theme.COLORS.GREEN_LIGHT};
   align-items: center;
   justify-content: flex-start;
+  margin-bottom: 30px;
 `;
 
 export const AccessButton = styled.TouchableOpacity`
