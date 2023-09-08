@@ -1,13 +1,17 @@
+import { TouchableOpacityProps } from "react-native";
 import { AccessButton, AccessIcon, BoxPercentNumber, Container, Subtitle, Title } from './styles';
 
-type Props = {
-  percent: number
+type Props = TouchableOpacityProps & {
+  percent: number;
+  handleDiet: () => void;
 }
 
-export function HeaderStatistics({ percent }: Props) {
+export function HeaderStatistics({ percent, handleDiet, ...rest }: Props) {
   return (
     <Container>
-      <AccessButton>
+      <AccessButton {...rest}
+      onPress={handleDiet}
+      >
         <AccessIcon />
       </AccessButton>
       <BoxPercentNumber>

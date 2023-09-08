@@ -4,9 +4,11 @@ import { useFonts, Nunito_400Regular, Nunito_700Bold } from '@expo-google-fonts/
 
 import theme from './src/@theme';
 
-import { Diet } from "./src/screens/Diet";
+// import { Diet } from "./src/screens/Diet";
 import { Loading } from '@components/Loading';
-import { Statistics } from '@screens/Statistics';
+// import { Statistics } from '@screens/Statistics';
+
+import { Routes } from './src/routes';
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Nunito_400Regular, Nunito_700Bold });
@@ -18,7 +20,7 @@ export default function App() {
           backgroundColor="transparent"
           translucent
         />
-      { fontsLoaded ? <Statistics/> : <Loading /> }
+      { fontsLoaded ? <Routes/> : <Loading /> }
     </ThemeProvider>
   );
 }

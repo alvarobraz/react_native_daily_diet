@@ -1,9 +1,18 @@
+import { useNavigation } from '@react-navigation/native'  
 import { ScrollView } from "react-native";
 import { HeaderStatistics } from "@components/HeaderStatistics";
 import { BoxStatistics, Container, Title } from "./styles";
 import { PercentHome } from "@components/PercentHome";
 
+
+
 export function Statistics() {
+
+  const navigation = useNavigation()
+
+  function handleDiet() {
+    navigation.navigate('diet')
+  }
 
   const percent = 90.86
   const bestDish = "melhor sequência de pratos dentro da dieta"
@@ -13,6 +22,7 @@ export function Statistics() {
     <Container>
       <HeaderStatistics
       percent={percent}
+      handleDiet={handleDiet}
       />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Title>

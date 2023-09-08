@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native'  
 import { Buttom } from '@components/Buttom';
 import { Container, Title } from './styles';
 import { HeaderHome } from '@components/HeaderHome';
@@ -7,6 +8,12 @@ import { Text, SectionList } from 'react-native';
 import { useState } from 'react';
 
 export function Diet() {
+
+  const navigation = useNavigation()
+
+  function handleStatistics() {
+    navigation.navigate('statistics')
+  }
 
   const percent = 90.86
 
@@ -64,6 +71,7 @@ export function Diet() {
       percent={percent}
       name="das refeições dentro da dieta"
       icon={true}
+      handleStatistics={handleStatistics}
     />
     <Title>
       Refeições
