@@ -1,24 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native' 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScrollView } from "react-native";
 import { HeaderNew } from "@components/New/HeaderNew";
 import { BoxHalfInput, BoxTopInput, Container, HalfInput, Title, BoxButtom } from "./styles";
 import { Input } from '@components/App/Input';
 import { ButtomMeal } from '@components/App/ButtomMeal';
 import { Buttom } from '@components/App/Buttom';
-
-type MealStorageDTO = {
-  name: string;
-  description: string;
-  date: string;
-  time: string;
-  isInsideTheDiet: boolean;
-}
-
-type MealsSectionDTO = {
-  title: string;
-  data: MealStorageDTO[];
-}
+import { MEAL_COLLECTION } from '@storage/storageConfig';
+import { MealsSectionDTO } from '@dtos/Meal';
 
 export function New() {
 
@@ -64,19 +54,27 @@ export function New() {
         },
       ]);
 
-      
-
       setMealName('');
       setMealDescription('');
       setMealDate('');
       setMealTime('');
     }
   }
-  
-  // useEffect(()=>{
-  // },[])
 
-  console.log(Meals)
+  async function mealCreate(Meals: MealsSectionDTO[]) {
+    try {
+      const mealsJSON = JSON.stringify(Meals);
+      await AsyncStorage.setItem(MEAL_COLLECTION, mealsJSON);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  useEffect(()=>{
+    Meals.length ?? mealCreate(Meals)
+  },[Meals])
+
+  
 
   return (
     <Container>

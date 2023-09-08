@@ -6,6 +6,7 @@ import { PercentHome } from '@components/App/PercentHome';
 import { Buttom } from '@components/App/Buttom';
 import { Text, SectionList } from 'react-native';
 import { useState } from 'react';
+import { MealsSectionDTO } from '@dtos/Meal';
 
 export function Diet() {
 
@@ -20,19 +21,6 @@ export function Diet() {
   }
 
   const percent = 90.86
-
-  type MealStorageDTO = {
-    name: string;
-    description: string;
-    date: string;
-    time: string;
-    isInsideTheDiet: boolean;
-  }
-
-  type MealsSectionDTO = {
-    title: string;
-    data: MealStorageDTO[];
-  }
 
   const dataMeal = [
     {
