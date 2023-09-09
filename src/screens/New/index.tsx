@@ -1,32 +1,37 @@
 import { useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native' 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native'
 import { ScrollView } from "react-native";
 import { HeaderNew } from "@components/New/HeaderNew";
 import { BoxHalfInput, BoxTopInput, Container, HalfInput, Title, BoxButtom } from "./styles";
 import { Input } from '@components/App/Input';
 import { ButtomMeal } from '@components/App/ButtomMeal';
 import { Buttom } from '@components/App/Buttom';
-import { MEAL_COLLECTION } from '@storage/storageConfig';
 import { MealsSectionDTO } from '@dtos/Meal';
+import { formatDate, formatTime } from '@utils/indx';
+import { mealCreate } from '@storage/Meal/mealCreate';
+import { getAllMeals } from '@storage/Meal/getAllMeals';
+
 
 export function New() {
 
   const navigation = useNavigation()
 
   function handleNew() {
-    navigation.goBack()
+    navigation.navigate('diet')
   }
 
   const [mealName, setMealName] = useState('');
   const [mealDescription, setMealDescription] = useState('');
   const [mealDate, setMealDate] = useState('');
   const [mealTime, setMealTime] = useState('');
-  const [isInsideTheDiet, setIsInsideTheDiet] = useState<boolean>();
+  const [isInsideTheDiet, setIsInsideTheDiet] = useState<boolean>(true);
+  const [radioClicked, setRadioClicked] = useState('TERTIARY');
   const [Meals, setMeals] = useState<MealsSectionDTO[]>([]);
-  
-  function handleIsInsideTheDiet(status: boolean) {
-    status ? setIsInsideTheDiet(true) : setIsInsideTheDiet(false)
+
+
+  function handleIsInsideTheDiet(status: boolean, clicked: string) {
+    status === true ? setIsInsideTheDiet(true) : setIsInsideTheDiet(false)
+    setRadioClicked(clicked)
   }
 
   function handleRegisterNewMeal() {
@@ -61,20 +66,38 @@ export function New() {
     }
   }
 
-  async function mealCreate(Meals: MealsSectionDTO[]) {
+  async function newMealCreate(Meals: MealsSectionDTO[]) {
     try {
-      const mealsJSON = JSON.stringify(Meals);
-      await AsyncStorage.setItem(MEAL_COLLECTION, mealsJSON);
+
+      const storedData = await getAllMeals()
+
+      const existingMeals = storedData ? storedData : [];
+      const combinedMeals = [...existingMeals, ...Meals];
+
+      const groupedMeals = combinedMeals.reduce((groups, meal) => {
+        const existingGroup = groups.find((group: MealsSectionDTO) => group.title === meal.title);
+        if (existingGroup) {
+          existingGroup.data.push(...meal.data);
+        } else {
+          groups.push({ title: meal.title, data: meal.data });
+        }
+        return groups;
+      }, [] as MealsSectionDTO[]);
+
+      const mealsJSON = JSON.stringify(groupedMeals);
+      await mealCreate(mealsJSON)
+      navigation.navigate('diet');
+      
     } catch (error) {
       throw error;
     }
   }
 
   useEffect(()=>{
-    Meals.length ?? mealCreate(Meals)
+    if(Meals.length !== 0) {
+      newMealCreate(Meals)
+    }
   },[Meals])
-
-  
 
   return (
     <Container>
@@ -111,7 +134,7 @@ export function New() {
             <Input 
               placeholder="Data"
               value={mealDate}
-              onChangeText={(text) => setMealDate(text)}
+              onChangeText={(text) => setMealDate(formatDate(text))}
             />
           </HalfInput>
           <HalfInput>
@@ -121,7 +144,7 @@ export function New() {
             <Input 
               placeholder="Hora"
               value={mealTime}
-              onChangeText={(text) => setMealTime(text)}
+              onChangeText={(text) => setMealTime(formatTime(text))}
             />
           </HalfInput>
         </BoxHalfInput>
@@ -137,14 +160,16 @@ export function New() {
             <ButtomMeal
               title='Sim'
               typeIcon='TERTIARY'
-              onPress={()=>handleIsInsideTheDiet(true)}
+              onPress={()=>handleIsInsideTheDiet(true, 'TERTIARY')}
+              radioClicked={radioClicked}
             />
           </HalfInput>
           <HalfInput>
           <ButtomMeal
               title='Não'
               typeIcon='QUARTARY'
-              onPress={()=>handleIsInsideTheDiet(false)}
+              onPress={()=>handleIsInsideTheDiet(false, 'QUARTARY')}
+              radioClicked={radioClicked}
             />
           </HalfInput>
         </BoxHalfInput>

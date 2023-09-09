@@ -26,7 +26,7 @@ export function PercentHome({ percent, name, icon, type, status, handleStatistic
       }
       <BoxPercentNumber type={type}>
           <Title>
-            {percent}
+            {`${percent}%`}
           </Title>
           <Subtitle>
             {name}

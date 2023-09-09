@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 import { MaterialIcons } from '@expo/vector-icons'
 
-export type ButtonIconTypeStyleProps = 'PRIMARY' | 'SECONDARY' | 'TERTIARY' | 'QUARTARY';
+export type ButtonIconTypeStyleProps = 'PRIMARY' | 'SECONDARY' | 'TERTIARY' | 'QUARTARY'
 
 type Props = {
   type: ButtonIconTypeStyleProps;

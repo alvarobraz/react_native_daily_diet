@@ -8,8 +8,12 @@ type Props = {
 }
 
 export const Container = styled(TextInput)<Props>`
-  height: ${({ theme, type }) => type === 'TEXT' ? '48px' : '120px'};
-  width: 100%;
+  /* flex:1; */
+  flex-direction: column;
+  justify-content: flex-start;
+  background-color: #000;
+  height: ${({ type }) => type === 'TEXT' ? '48px' : '120px'};
+  max-width: 327px;
 
   color: ${({ theme }) => theme.COLORS.GRAY_1};
   background-color: ${({ theme }) => theme.COLORS.WHITE};
@@ -20,7 +24,11 @@ export const Container = styled(TextInput)<Props>`
   border: 1px solid ${({ theme }) => theme.COLORS.GRAY_5};
   border-radius: 6px;
 
+  padding-top: 10px;
   padding-left: 20px;
   padding-right: 20px;
   margin-bottom: 20px;
+
+  text-align: left;
+  text-align-vertical: top;
 `;

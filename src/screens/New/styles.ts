@@ -9,9 +9,9 @@ export const Container = styled.View`
 `;
 
 export const BoxTopInput = styled.View`
-  width: 100%;
+  max-width: 327px;
   flex-direction: column;
-  align-items: center;
+  align-items: left;
   justify-content: space-between;
   padding-left: 20px;
   padding-right: 20px;
