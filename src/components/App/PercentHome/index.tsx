@@ -5,12 +5,13 @@ type Props = TouchableOpacityProps & {
   percent: number;
   name: string;
   icon?: boolean;
+  isHavePercent?: boolean;
   type: WidthBox;
   status?: boolean,
   handleStatistics?: () => void
 }
 
-export function PercentHome({ percent, name, icon, type, status, handleStatistics, ...rest }: Props) {
+export function PercentHome({ percent, name, icon, isHavePercent, type, status, handleStatistics, ...rest }: Props) {
   return (
     <Container type={type} status={status}>
       {
@@ -24,9 +25,9 @@ export function PercentHome({ percent, name, icon, type, status, handleStatistic
         :
         null
       }
-      <BoxPercentNumber type={type}>
+      <BoxPercentNumber isHavePercent={isHavePercent} type={type}>
           <Title>
-            {`${percent}%`}
+          {isHavePercent ? `${percent}%` : percent}
           </Title>
           <Subtitle>
             {name}

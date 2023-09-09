@@ -6,7 +6,8 @@ export type WidthBox = 1 | 2 | 3;
 
 type Props = {
   type: WidthBox;
-  status?: boolean
+  status?: boolean;
+  isHavePercent?: boolean;
 }
 
 export const Container = styled.View<Props>`
@@ -51,4 +52,6 @@ export const Subtitle = styled.Text`
   font-size: ${({ theme }) => theme.FONT_SIZE.SM}px;
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
   color: ${({ theme }) => theme.COLORS.GRAY_2};
+  padding-left: 5px;
+  padding-right: 5px;
 `;

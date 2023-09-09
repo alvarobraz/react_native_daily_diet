@@ -1,5 +1,4 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native'  
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Container, ListEnpty, Title } from './styles';
 import { HeaderHome } from '@components/Home/HeaderHome';
 import { DailyMeals } from '@components/Home/DailyMeals';
@@ -10,32 +9,45 @@ import { useCallback, useState } from 'react';
 import { MealsSectionDTO } from '@dtos/Meal';
 import { getAllMeals } from '@storage/Meal/getAllMeals';
 import { Loading } from '@components/App/Loading';
-import { calcPercentMeal } from '@utils/indx';
+import { calcPercentMeal } from '@utils/index';
+
+type PropsPercent = {
+  statusPercent: number;
+  maxSequence:number;
+  isInside: number;
+  isOutSide: number;
+  totalMealsRegister: number;
+}
 
 export function Diet() {
 
   const navigation = useNavigation()
 
-  function handleStatistics() {
-    navigation.navigate('statistics')
-  }
-
   function handleButton() {
     navigation.navigate('new')
   }
 
-  
-
   const [mealsInSection, setMealsInSection] = useState<MealsSectionDTO[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [percent, setPercent] = useState(0);
-  // const percent = 90.86
+  const [statusPercent, setStatusPercent] = useState(0);
+  const [totalMealsRegister, setTotalMealsRegister] = useState(0);
+  const [maxSequence, setMaxSequence] = useState(0);
+  const [isInside, setIsInside] = useState(0);
+  const [isOutSide, setIsOutSide] = useState(0);
 
   async function checkStoredDataMeal() {
 		try {
 			setIsLoading(true);
 			const allMealsInSection = await getAllMeals();
 			setMealsInSection(allMealsInSection);
+      const percentages = await calcPercentMeal(allMealsInSection)
+      console.log(percentages)
+      setStatusPercent(percentages.statusPercent)
+      setTotalMealsRegister(percentages.totalMealsRegister)
+      setMaxSequence(percentages.maxSequence)
+      setIsInside(percentages.isInside)
+      setIsOutSide(percentages.isOutSide)
+      setIsLoading(false);
 		} catch (error) {
 			console.log(error);
 			return Alert.alert(
@@ -46,27 +58,14 @@ export function Diet() {
 			setIsLoading(false);
 		}
 	}
-  
-  async function clearStorage() {
-    try {
-      await AsyncStorage.clear();
-      console.log('O AsyncStorage foi limpo com sucesso.');
-    } catch (error) {
-      console.error('Erro ao limpar o AsyncStorage:', error);
-    }
-  }
 
-  async function percentMeal() {
-    const isPercente = await calcPercentMeal(mealsInSection)
-    // console.log(isPercente)
-    setPercent(isPercente)
+  function handleStatistics() {
+    navigation.navigate('statistics', { statusPercent, isInside, isOutSide, totalMealsRegister, maxSequence })
   }
 
   
   useFocusEffect(useCallback(() => {
 		checkStoredDataMeal() 
-    percentMeal()
-    // clearStorage()
 	}, []));
 
   return (
@@ -74,9 +73,10 @@ export function Diet() {
      <HeaderHome />
      <PercentHome
       type={1}
-      percent={percent}
+      percent={statusPercent}
       name="das refeições dentro da dieta"
       icon={true}
+      isHavePercent={true}
       handleStatistics={handleStatistics}
     />
     <Title>

@@ -53,7 +53,7 @@ export const BoxButtom= styled.View`
   justify-content: flex-end;
   padding-left: 20px;
   padding-right: 20px;
-  margin-bottom: 20px;
+  
 `;
 
 

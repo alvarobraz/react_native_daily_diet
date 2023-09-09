@@ -7,7 +7,7 @@ import { Input } from '@components/App/Input';
 import { ButtomMeal } from '@components/App/ButtomMeal';
 import { Buttom } from '@components/App/Buttom';
 import { MealsSectionDTO } from '@dtos/Meal';
-import { formatDate, formatTime } from '@utils/indx';
+import { formatDate, formatTime } from '@utils/index';
 import { mealCreate } from '@storage/Meal/mealCreate';
 import { getAllMeals } from '@storage/Meal/getAllMeals';
 

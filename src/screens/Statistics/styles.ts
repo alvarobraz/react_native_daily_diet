@@ -6,6 +6,7 @@ export const Container = styled.View`
   align-items: center;
   justify-content: center;
   align-content: center;
+  padding-bottom: 20px;
   
 `;
 

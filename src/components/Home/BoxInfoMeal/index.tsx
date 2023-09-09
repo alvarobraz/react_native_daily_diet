@@ -1,6 +1,5 @@
 import { StatusMeal } from "@components/Home/StatusMeal";
 import { InfoMeal, Hour, Separator, Info, TitleInfo } from "./styles";
-// import { DailyMealsProps } from "@components/DailyMeals";
 
 type Props = {
 	hour: string;
