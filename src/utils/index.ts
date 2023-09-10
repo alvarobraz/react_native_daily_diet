@@ -45,53 +45,65 @@ export async function calcPercentMeal(mealsInSection: MealsSectionDTO[]) {
     let currentSequence = 0;
     let maxSequence = 0;
 
-    const { isInside, isOutSide } = mealsInSection.reduce(
-      (counts, item) => {
-        let prevIsInside = false;
-
-        item.data.forEach((entry) => {
-          if (entry.isInsideTheDiet) {
-            counts.isInside++;
-            if (!prevIsInside) {
-              currentSequence = 1;
+    if(mealsInSection.length !== 0) {
+      const { isInside, isOutSide } = mealsInSection.reduce(
+        (counts, item) => {
+          let prevIsInside = false;
+  
+          item.data.forEach((entry) => {
+            if (entry.isInsideTheDiet) {
+              counts.isInside++;
+              if (!prevIsInside) {
+                currentSequence = 1;
+              } else {
+                currentSequence++;
+              }
             } else {
-              currentSequence++;
+              counts.isOutSide++;
+              currentSequence = 0;
             }
-          } else {
-            counts.isOutSide++;
-            currentSequence = 0;
-          }
-
-          prevIsInside = entry.isInsideTheDiet;
-
-          if (currentSequence > maxSequence) {
-            maxSequence = currentSequence;
-          }
-        });
-        return counts;
-      },
-      { isInside: 0, isOutSide: 0 }
-    );
-
-    const totalMealsRegister = isInside + isOutSide;
-    const truePercentage = (isInside / totalMealsRegister) * 100;
-    const falsePercentage = (isOutSide / totalMealsRegister) * 100;
-
-    const roundedTruePercentage = truePercentage.toFixed(2);
-
-    statusPercent = parseFloat(roundedTruePercentage);
-
-    if (statusPercent <= 30) {
-      statusPercent = falsePercentage;
+  
+            prevIsInside = entry.isInsideTheDiet;
+  
+            if (currentSequence > maxSequence) {
+              maxSequence = currentSequence;
+            }
+          });
+          return counts;
+        },
+        { isInside: 0, isOutSide: 0 }
+      );
+  
+      const totalMealsRegister = isInside + isOutSide;
+      const truePercentage = (isInside / totalMealsRegister) * 100;
+      const falsePercentage = (isOutSide / totalMealsRegister) * 100;
+  
+      const roundedTruePercentage = truePercentage.toFixed(2);
+  
+      statusPercent = parseFloat(roundedTruePercentage);
+  
+      if (statusPercent <= 30) {
+        statusPercent = falsePercentage;
+      }
+  
+      return {
+        statusPercent,
+        totalMealsRegister,
+        isInside,
+        isOutSide,
+        maxSequence,
+      }
     }
-
+    
     return {
-      statusPercent,
-      totalMealsRegister,
-      isInside,
-      isOutSide,
-      maxSequence,
+      statusPercent: 0,
+      totalMealsRegister: 0,
+      isInside: 0,
+      isOutSide: 0,
+      maxSequence: 0,
     }
+
+    
 
   } catch (error) {
     throw error;

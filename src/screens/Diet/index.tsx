@@ -10,14 +10,15 @@ import { MealsSectionDTO } from '@dtos/Meal';
 import { getAllMeals } from '@storage/Meal/getAllMeals';
 import { Loading } from '@components/App/Loading';
 import { calcPercentMeal } from '@utils/index';
+import { clearMealCollection } from '@storage/Meal/removeMeal';
 
-type PropsPercent = {
-  statusPercent: number;
-  maxSequence:number;
-  isInside: number;
-  isOutSide: number;
-  totalMealsRegister: number;
-}
+// type PropsPercent = {
+//   statusPercent: number;
+//   maxSequence:number;
+//   isInside: number;
+//   isOutSide: number;
+//   totalMealsRegister: number;
+// }
 
 export function Diet() {
 
@@ -62,11 +63,13 @@ export function Diet() {
   function handleStatistics() {
     navigation.navigate('statistics', { statusPercent, isInside, isOutSide, totalMealsRegister, maxSequence })
   }
-
   
   useFocusEffect(useCallback(() => {
 		checkStoredDataMeal() 
+    // clearMealCollection()
 	}, []));
+
+  console.log(statusPercent)
 
   return (
     <Container>

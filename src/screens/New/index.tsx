@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native'
 import { ScrollView } from "react-native";
 import { HeaderNew } from "@components/New/HeaderNew";
-import { BoxHalfInput, BoxTopInput, Container, HalfInput, Title, BoxButtom } from "./styles";
+import { BoxHalfInput, BoxTopInput, Container, HalfInput, Title, BoxButtom, BoxMessageSuccessAndFail, TitleMessage, SubTitleMessage, BoxMessageImages, Images } from "./styles";
 import { Input } from '@components/App/Input';
 import { ButtomMeal } from '@components/App/ButtomMeal';
 import { Buttom } from '@components/App/Buttom';
@@ -10,6 +10,8 @@ import { MealsSectionDTO } from '@dtos/Meal';
 import { formatDate, formatTime } from '@utils/index';
 import { mealCreate } from '@storage/Meal/mealCreate';
 import { getAllMeals } from '@storage/Meal/getAllMeals';
+import imgSuccess from '../../assets/image_message_success.png';
+import imgFail from '../../assets/image_message_fail.png'
 
 
 export function New() {
@@ -27,6 +29,8 @@ export function New() {
   const [isInsideTheDiet, setIsInsideTheDiet] = useState<boolean>(true);
   const [radioClicked, setRadioClicked] = useState('TERTIARY');
   const [Meals, setMeals] = useState<MealsSectionDTO[]>([]);
+  const [isCreated, setIsCreated] = useState<boolean>(false);
+  const [result, setResult] = useState<boolean>();
 
 
   function handleIsInsideTheDiet(status: boolean, clicked: string) {
@@ -69,28 +73,36 @@ export function New() {
   async function newMealCreate(Meals: MealsSectionDTO[]) {
     try {
 
-      const storedData = await getAllMeals()
+      const storedDatMeals = await getAllMeals()
 
-      const existingMeals = storedData ? storedData : [];
+      const existingMeals = storedDatMeals ? storedDatMeals : [];
       const combinedMeals = [...existingMeals, ...Meals];
 
-      const groupedMeals = combinedMeals.reduce((groups, meal) => {
-        const existingGroup = groups.find((group: MealsSectionDTO) => group.title === meal.title);
+      const groupedMeals = combinedMeals.reduce((meals, newMeal) => {
+        const existingGroup = meals.find((meal: MealsSectionDTO) => meal.title === newMeal.title);
         if (existingGroup) {
-          existingGroup.data.push(...meal.data);
+          existingGroup.data.push(...newMeal.data);
         } else {
-          groups.push({ title: meal.title, data: meal.data });
+          meals.push({ title: newMeal.title, data: newMeal.data });
         }
-        return groups;
+        return meals;
       }, [] as MealsSectionDTO[]);
 
       const mealsJSON = JSON.stringify(groupedMeals);
       await mealCreate(mealsJSON)
-      navigation.navigate('diet');
-      
+
+      const storedDataNewMeals = await getAllMeals()
+      const getResult = storedDataNewMeals.some(meal => meal.data.some(item => item.isInsideTheDiet === false));
+      console.log(getResult)
+      setResult(getResult)
+      setIsCreated(true)
     } catch (error) {
       throw error;
     }
+  }
+
+  function goHome() {
+    navigation.navigate('diet');
   }
 
   useEffect(()=>{
@@ -101,86 +113,123 @@ export function New() {
 
   return (
     <Container>
-      <HeaderNew
-        name="Nova refeição"
-        handleNew={handleNew}
-      />
-       <ScrollView showsVerticalScrollIndicator={false}>
-        <BoxTopInput>
-          <Title>
-            Nome
-          </Title>
-          <Input 
-            placeholder="Nome da refeição"
-            value={mealName}
-            onChangeText={(text) => setMealName(text)}
-          />
-          <Title>
-            Descrição
-          </Title>
-          <Input 
-            placeholder="Descrição da refeição"
-            value={mealDescription}
-            onChangeText={(text) => setMealDescription(text)}
-            multiline={true}
-            type='TEXTAREA'
-          />
-        </BoxTopInput>
-        <BoxHalfInput>
-          <HalfInput>
+      {
+        !isCreated ?
+        <>
+        <HeaderNew
+          name="Nova refeição"
+          handleNew={handleNew}
+        />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <BoxTopInput>
             <Title>
-              Data
+              Nome
             </Title>
             <Input 
-              placeholder="Data"
-              value={mealDate}
-              onChangeText={(text) => setMealDate(formatDate(text))}
+              placeholder="Nome da refeição"
+              value={mealName}
+              onChangeText={(text) => setMealName(text)}
             />
-          </HalfInput>
-          <HalfInput>
             <Title>
-              Hora
+              Descrição
             </Title>
             <Input 
-              placeholder="Hora"
-              value={mealTime}
-              onChangeText={(text) => setMealTime(formatTime(text))}
+              placeholder="Descrição da refeição"
+              value={mealDescription}
+              onChangeText={(text) => setMealDescription(text)}
+              multiline={true}
+              type='TEXTAREA'
             />
-          </HalfInput>
-        </BoxHalfInput>
+          </BoxTopInput>
+          <BoxHalfInput>
+            <HalfInput>
+              <Title>
+                Data
+              </Title>
+              <Input 
+                placeholder="Data"
+                value={mealDate}
+                onChangeText={(text) => setMealDate(formatDate(text))}
+              />
+            </HalfInput>
+            <HalfInput>
+              <Title>
+                Hora
+              </Title>
+              <Input 
+                placeholder="Hora"
+                value={mealTime}
+                onChangeText={(text) => setMealTime(formatTime(text))}
+              />
+            </HalfInput>
+          </BoxHalfInput>
 
-        <BoxHalfInput>
-        <Title>
-          Está dentro da diéta?
-        </Title>
-        </BoxHalfInput>
-        
-        <BoxHalfInput>
-          <HalfInput>
+          <BoxHalfInput>
+          <Title>
+            Está dentro da diéta?
+          </Title>
+          </BoxHalfInput>
+          
+          <BoxHalfInput>
+            <HalfInput>
+              <ButtomMeal
+                title='Sim'
+                typeIcon='TERTIARY'
+                onPress={()=>handleIsInsideTheDiet(true, 'TERTIARY')}
+                radioClicked={radioClicked}
+              />
+            </HalfInput>
+            <HalfInput>
             <ButtomMeal
-              title='Sim'
-              typeIcon='TERTIARY'
-              onPress={()=>handleIsInsideTheDiet(true, 'TERTIARY')}
-              radioClicked={radioClicked}
+                title='Não'
+                typeIcon='QUARTARY'
+                onPress={()=>handleIsInsideTheDiet(false, 'QUARTARY')}
+                radioClicked={radioClicked}
+              />
+            </HalfInput>
+          </BoxHalfInput>
+          <BoxButtom>
+            <Buttom
+            title='Cadastrar refeição'
+            icon={false}
+            onPress={handleRegisterNewMeal}
             />
-          </HalfInput>
-          <HalfInput>
-          <ButtomMeal
-              title='Não'
-              typeIcon='QUARTARY'
-              onPress={()=>handleIsInsideTheDiet(false, 'QUARTARY')}
-              radioClicked={radioClicked}
-            />
-          </HalfInput>
-        </BoxHalfInput>
-        <BoxButtom>
-          <Buttom
-          title='Cadastrar refeição'
-          icon={false}
-          onPress={handleRegisterNewMeal}
+          </BoxButtom>
+        </ScrollView>
+        </>
+        :
+        <>
+        <BoxMessageSuccessAndFail>
+          <TitleMessage typeTitle={!result ? 'success': 'fail'}>
+            {!result ? 'Continue Assim': 'Que pena!'}
+          </TitleMessage>
+          <SubTitleMessage>
+          {!result ? 'Você continua dentro da dieta. Muito bem!': 'Você saiu da dieta dessa vez, mas continue se esforçando e não desista!'}
+          </SubTitleMessage>
+        </BoxMessageSuccessAndFail>
+        <BoxMessageImages>
+        {!result ? 
+         <Images
+         source={imgSuccess}
+         />
+         : 
+         <Images
+          source={imgFail}
           />
+        }
+         
+        </BoxMessageImages>
+        <BoxButtom>
+        <Buttom
+          title='Ir para a página inicial'
+          icon={false}
+          onPress={goHome}
+        />
         </BoxButtom>
-       </ScrollView>
+        </>
+        
+      }
+      
     </Container>
   )
 }
