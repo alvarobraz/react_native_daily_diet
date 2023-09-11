@@ -9,7 +9,9 @@ export declare global {
         isOutSide: number;
         totalMealsRegister: number
       };
-      new: undefined;
+      new: {
+        dateTime?: string;
+      };
       meal: {
         dateTime: string;
       };

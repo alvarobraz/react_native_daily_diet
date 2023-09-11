@@ -32,6 +32,10 @@ export function Meal() {
     setIsLoading(false);
   } 
 
+  function handleEditMeal() {
+    navigation.navigate('new', { dateTime: dateTime })
+  }
+
   useFocusEffect(useCallback(() => {
     getShowMeal(dateTime)
     // clearMealCollection()
@@ -78,6 +82,7 @@ export function Meal() {
           title='Editar refeição'
           name='border-color'
           size={16}
+          handleButton={handleEditMeal}
         />
         <Buttom
           title='Excluir refeição'

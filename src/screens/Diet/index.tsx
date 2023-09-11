@@ -10,13 +10,14 @@ import { MealsSectionDTO } from '@dtos/Meal';
 import { getAllMeals } from '@storage/Meal/getAllMeals';
 import { Loading } from '@components/App/Loading';
 import { calcPercentMeal } from '@utils/index';
+import { clearMealCollection } from '@storage/Meal/removeMeal';
 
 export function Diet() {
 
   const navigation = useNavigation()
 
   function handleButton() {
-    navigation.navigate('new')
+    navigation.navigate('new', {})
   }
 
   const [mealsInSection, setMealsInSection] = useState<MealsSectionDTO[]>([]);
@@ -66,7 +67,7 @@ export function Diet() {
     // clearMealCollection()
 	}, []));
 
-  console.log(statusPercent)
+  // console.log(statusPercent)
 
   return (
     <Container>
