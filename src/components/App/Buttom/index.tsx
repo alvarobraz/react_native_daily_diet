@@ -8,15 +8,26 @@ type Props = TouchableOpacityProps & {
   title: string;
   type?: ButtonTypeStyleProps;
   handleButton?: () => void;
-  typeIcon?: ButtonIconTypeStyleProps
+  typeIcon?: ButtonIconTypeStyleProps;
   size?:number;
-  icon?: boolean
-  name: 'add' | 'circle' | 'border-color' | 'delete-outline'
+  icon?: boolean;
+  name: 'add' | 'circle' | 'border-color' | 'delete-outline';
+  width?: string;
 }
 
-export function Buttom({ title, type = 'PRIMARY', handleButton, size, typeIcon, icon, name, ...rest }: Props) {
+export function Buttom({ 
+  title, 
+  type = 'PRIMARY', 
+  handleButton, 
+  size, 
+  typeIcon, 
+  icon, 
+  name,
+  width,
+  ...rest 
+}: Props) {
   return (
-    <Container onPress={handleButton} type={type} {...rest}>
+    <Container onPress={handleButton} type={type} width={width} {...rest}>
       {
         icon ?? <ButtonIcon
                   icon={name}

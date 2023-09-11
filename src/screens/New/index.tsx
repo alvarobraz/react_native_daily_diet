@@ -101,37 +101,6 @@ export function New() {
     }
   }
 
-  async function newMealCreate(Meals: MealsSectionDTO[]) {
-    try {
-
-      const storedDatMeals = await getAllMeals()
-
-      const existingMeals = storedDatMeals ? storedDatMeals : [];
-      const combinedMeals = [...existingMeals, ...Meals];
-
-      const groupedMeals = combinedMeals.reduce((meals, newMeal) => {
-        const existingGroup = meals.find((meal: MealsSectionDTO) => meal.title === newMeal.title);
-        if (existingGroup) {
-          existingGroup.data.push(...newMeal.data);
-        } else {
-          meals.push({ title: newMeal.title, data: newMeal.data });
-        }
-        return meals;
-      }, [] as MealsSectionDTO[]);
-
-      const mealsJSON = JSON.stringify(groupedMeals);
-      await mealCreate(mealsJSON)
-
-      const storedDataNewMeals = await getAllMeals()
-      const getResult = storedDataNewMeals.some(meal => meal.data.some(item => item.isInsideTheDiet === false));
-      console.log(getResult)
-      setResult(getResult)
-      setIsCreated(true)
-    } catch (error) {
-      throw error;
-    }
-  }
-
   function goHome() {
     navigation.navigate('diet');
   }
@@ -249,6 +218,8 @@ export function New() {
       }
     }
   }
+
+ 
 
   useEffect(()=>{
     if(dateTime !== undefined) {

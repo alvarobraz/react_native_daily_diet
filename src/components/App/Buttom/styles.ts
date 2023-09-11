@@ -5,10 +5,11 @@ export type ButtonTypeStyleProps = 'PRIMARY' | 'SECONDARY';
 
 type Props = {
   type: ButtonTypeStyleProps;
+  width?: string
 }
 
 export const Container = styled(TouchableOpacity)<Props>`
-  width: 100%;
+  width: ${({ width }) => width ? width : '100%'};
   height: 50px;
   background-color: ${({ theme, type }) => type === 'PRIMARY' ? theme.COLORS.GRAY_2 : theme.COLORS.WHITE};
   border: 1px solid ${({ theme, type }) => type === 'PRIMARY' ? theme.COLORS.GRAY_2 : theme.COLORS.GRAY_2};
@@ -16,7 +17,9 @@ export const Container = styled(TouchableOpacity)<Props>`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin-bottom: 12px
+  margin-bottom: 12px;
+  margin-left: ${({ width }) => width ? '10px' : '0'};
+  /* padding-left: 10px */
 `;
 
 export const Title = styled.Text<Props>`

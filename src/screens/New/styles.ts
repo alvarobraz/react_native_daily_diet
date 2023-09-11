@@ -115,3 +115,7 @@ export const Images = styled.Image`
   width: 224px;
   height: 288px;
 `;
+
+
+
+

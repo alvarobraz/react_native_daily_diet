@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import { TouchableOpacity } from "react-native";
 
 export const Container = styled.View`
   flex: 1;
@@ -69,3 +70,41 @@ export const BoxButtons = styled.View`
   margin-right: 20px;
   
 `
+
+export const ModalContainer = styled.View`
+  flex: 1;
+  /* height: 100%; */
+  background-color: ${({ theme }) => theme.COLORS.GRAY_1};
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: rgba(0, 0, 0, 0.3);
+`;
+export const ModalContent = styled.View`
+  /* flex: 1; */
+
+  justify-content: center;
+  align-items: center;
+  align-content: center;  
+  height: 192px;
+  width: 100%;
+  background-color: ${({ theme }) => theme.COLORS.WHITE};
+  padding: 20px;
+  border-radius: 8px;
+`;
+
+export const ModalText = styled.Text`
+  font-size: ${({ theme }) => theme.FONT_SIZE.LG}px;
+  font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
+  color: ${({ theme }) => theme.COLORS.GRAY_2};
+  margin-bottom: 10px;;
+`;
+
+export const ButtonContainer = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+`;

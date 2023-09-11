@@ -1,5 +1,6 @@
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'  
-import { BoxButtons, Container, StatusMeal, SubTitle, Title, TitleStatus } from "./styles";
+import { Modal } from "react-native";
+import { BoxButtons, Container, StatusMeal, SubTitle, Title, TitleStatus, ModalContainer, ModalContent, ModalText, ButtonContainer } from "./styles";
 import { HeaderNew } from '@components/New/HeaderNew';
 import { ButtonIcon } from '@components/App/ButtonIcon';
 import { Buttom } from '@components/App/Buttom';
@@ -7,6 +8,8 @@ import { useCallback, useState } from 'react';
 import { MealStorageDTO } from '@dtos/Meal';
 import { Loading } from '@components/App/Loading';
 import { checkStoredDataShowMeal } from '@utils/index';
+import { getAllMeals } from '@storage/Meal/getAllMeals';
+import { mealCreate } from '@storage/Meal/mealCreate';
 
 type RouteParams = {
   dateTime: string;
@@ -36,6 +39,44 @@ export function Meal() {
     navigation.navigate('new', { dateTime: dateTime })
   }
 
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  // Função para mostrar o modal
+  const showModal = () => {
+    setModalVisible(true);
+  };
+
+  // Função para ocultar o modal
+  const hideModal = () => {
+    setModalVisible(false);
+  };
+
+  // Função para excluir o dado
+  async function handleDelete() {
+
+    const allMealsInSection = await getAllMeals();
+    const [date, time] = dateTime.split('-')
+
+    const dataSectionIndex = allMealsInSection.findIndex(item => {
+      return item.data.some(meal => meal.date === date && meal.time === time);
+    });
+
+    if (dataSectionIndex !== -1) {
+      const mealIndexToRemove = allMealsInSection[dataSectionIndex].data.findIndex(meal => meal.date === date && meal.time === time);
+      
+      if (mealIndexToRemove !== -1) {
+        allMealsInSection[dataSectionIndex].data.splice(mealIndexToRemove, 1);
+      }
+    }
+
+    // const [date, time] = dateTime.split('-')
+
+    // const filteredMeals = allMealsInSection.filter(item => item.data.filter(meal => meal.date === date && meal.time === time));
+    const mealsJSON = JSON.stringify(allMealsInSection);
+    await mealCreate(mealsJSON)
+    navigation.navigate('diet');
+  };
+
   useFocusEffect(useCallback(() => {
     getShowMeal(dateTime)
     // clearMealCollection()
@@ -43,6 +84,38 @@ export function Meal() {
 
   return (
     <Container>
+      <Modal
+          visible={isModalVisible}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={hideModal}
+        >
+          <ModalContainer>
+            <ModalContent>
+              <ModalText>Você realmente quer excluir esta refeição?</ModalText>
+              <ButtonContainer>
+              <Buttom
+                title='Cancelar'
+                type='SECONDARY'
+                width='120px'
+                name='add'
+                icon={false}
+                size={16}
+                onPress={hideModal}
+              />
+              <Buttom
+                title='Sim, excluir'
+                type='PRIMARY'
+                width='120px'
+                name='add'
+                icon={false}
+                size={16}
+                onPress={handleDelete}
+              />
+              </ButtonContainer>
+            </ModalContent>
+          </ModalContainer>
+        </Modal>
       <HeaderNew
         name='Refeição'
         handleNew={handleNew}
@@ -90,6 +163,7 @@ export function Meal() {
           typeIcon='SECONDARY'
           name='delete-outline'
           size={16}
+          onPress={showModal}
         />
       </BoxButtons>
     </Container>
