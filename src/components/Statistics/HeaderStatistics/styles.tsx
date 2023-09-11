@@ -1,12 +1,16 @@
 import styled from 'styled-components/native';
 import { ArrowLeft } from "phosphor-react-native/";
 
-export const Container = styled.View`
+type Props = {
+  status?: boolean;
+}
+
+export const Container = styled.View<Props>`
   flex-direction: column;
   width: 100%;
   height: 168px;
   border-radius: 8px;
-  background-color: ${({ theme }) => theme.COLORS.GREEN_LIGHT};
+  background-color: ${({ theme, status }) => status === false ? theme.COLORS.RED_LIGHT : theme.COLORS.GREEN_LIGHT};
   align-items: center;
   justify-content: center;
 `;
@@ -20,7 +24,7 @@ export const AccessButton = styled.TouchableOpacity`
 
 export const AccessIcon = styled(ArrowLeft).attrs(({ theme }) => ({
   size: 24,
-  color: theme.COLORS.GREEN_DARK
+  // color: theme.COLORS.GREEN_DARK
 }))``;
 
 export const BoxPercentNumber = styled.View`

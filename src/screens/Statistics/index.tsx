@@ -42,6 +42,7 @@ export function Statistics() {
         <HeaderStatistics
         percent={statusPercent}
         handleDiet={handleDiet}
+        status={statusPercent < 60 ? false : true}
         />
         <ScrollView showsVerticalScrollIndicator={false}>
           <Title>

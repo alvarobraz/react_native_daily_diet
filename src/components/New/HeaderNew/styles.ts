@@ -1,11 +1,17 @@
 import styled from 'styled-components/native';
 import { ArrowLeft } from "phosphor-react-native/";
 
-export const Container = styled.View`
+export type BackGroundTypeStyleProps = 'PRIMARY' | 'SECONDARY'
+
+type PropsContainer = {
+  type?: BackGroundTypeStyleProps
+}
+
+export const Container = styled.View<PropsContainer>`
   flex-direction: row;
   width: 100%;
   height: 104px;
-  background-color: ${({ theme }) => theme.COLORS.GREEN_LIGHT};
+  background-color: ${({ theme, type }) => type === 'PRIMARY' ? theme.COLORS.GREEN_LIGHT : theme.COLORS.RED_LIGHT};
   align-items: center;
   justify-content: flex-start;
   margin-bottom: 30px;

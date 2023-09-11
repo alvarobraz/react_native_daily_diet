@@ -1,4 +1,4 @@
-import { PressableProps } from 'react-native';
+import { Pressable, PressableProps } from 'react-native';
 import { Container } from "./styles";
 import { BoxInfoMeal } from "@components/Home/BoxInfoMeal";
 
@@ -8,15 +8,19 @@ type Props = PressableProps & {
 	isInsideTheDiet: boolean;
 }
 
-export function DailyMeals({ hour, name, isInsideTheDiet } : Props) {
+export function DailyMeals({ hour, name, isInsideTheDiet, ...rest } : Props) {
   return (
-
-    <Container>
-      <BoxInfoMeal
-        hour={hour}
-        name={name}
-        isInsideTheDiet={isInsideTheDiet}
-      />
-    </Container>    
+    <Pressable { ...rest }>
+			{({ pressed }) => (
+				<Container pressed={ pressed }>
+        <BoxInfoMeal
+          hour={hour}
+          name={name}
+          isInsideTheDiet={isInsideTheDiet}
+        />
+      </Container>  
+			)}
+		</Pressable>
+      
   )
 }

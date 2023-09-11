@@ -31,7 +31,7 @@ export const AccessButton = styled.TouchableOpacity`
 
 export const AccessIcon = styled(ArrowUpRight).attrs(({ theme }) => ({
   size: 24,
-  color: theme.COLORS.GREEN_DARK
+  // color: theme.COLORS.GREEN_DARK
 }))``;
 
 export const BoxPercentNumber = styled.View<Props>`

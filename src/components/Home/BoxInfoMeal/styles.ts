@@ -12,7 +12,7 @@ export const InfoMeal = styled.View`
   text-align: center;
   align-content: center;
   
-  margin-bottom: 10px;
+  
 `;
 
 export const Hour = styled.Text`

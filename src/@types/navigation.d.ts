@@ -10,6 +10,9 @@ export declare global {
         totalMealsRegister: number
       };
       new: undefined;
+      meal: {
+        dateTime: string;
+      };
     }
   }
 }

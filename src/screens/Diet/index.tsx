@@ -10,15 +10,6 @@ import { MealsSectionDTO } from '@dtos/Meal';
 import { getAllMeals } from '@storage/Meal/getAllMeals';
 import { Loading } from '@components/App/Loading';
 import { calcPercentMeal } from '@utils/index';
-import { clearMealCollection } from '@storage/Meal/removeMeal';
-
-// type PropsPercent = {
-//   statusPercent: number;
-//   maxSequence:number;
-//   isInside: number;
-//   isOutSide: number;
-//   totalMealsRegister: number;
-// }
 
 export function Diet() {
 
@@ -40,9 +31,9 @@ export function Diet() {
 		try {
 			setIsLoading(true);
 			const allMealsInSection = await getAllMeals();
+      console.log(JSON.stringify(allMealsInSection))
 			setMealsInSection(allMealsInSection);
       const percentages = await calcPercentMeal(allMealsInSection)
-      console.log(percentages)
       setStatusPercent(percentages.statusPercent)
       setTotalMealsRegister(percentages.totalMealsRegister)
       setMaxSequence(percentages.maxSequence)
@@ -63,6 +54,12 @@ export function Diet() {
   function handleStatistics() {
     navigation.navigate('statistics', { statusPercent, isInside, isOutSide, totalMealsRegister, maxSequence })
   }
+
+  function handleMealInfo(dateTime: string) {
+    navigation.navigate('meal', {
+			dateTime
+		});
+  }
   
   useFocusEffect(useCallback(() => {
 		checkStoredDataMeal() 
@@ -81,6 +78,7 @@ export function Diet() {
       icon={true}
       isHavePercent={true}
       handleStatistics={handleStatistics}
+      status={statusPercent < 60 ? false : true}
     />
     <Title>
       Refeições
@@ -88,6 +86,7 @@ export function Diet() {
     <Buttom
       title='Nova Refeição'
       onPress={handleButton}
+      name='add'
     />
     {
       isLoading ?
@@ -101,6 +100,7 @@ export function Diet() {
             name={ item.name }
             hour={ item.time }
             isInsideTheDiet={ item.isInsideTheDiet }
+            onPress={ () => handleMealInfo(`${ item.date }-${ item.time }`) }
           />
         )}
         renderSectionHeader={({ section }) => {

@@ -1,14 +1,17 @@
 import { TouchableOpacityProps } from "react-native";
-import { AccessButton, AccessIcon, BoxPercentNumber, Container, Title } from './styles';
+import { AccessButton, AccessIcon, BackGroundTypeStyleProps, BoxPercentNumber, Container, Title } from './styles';
+
+
 
 type Props = TouchableOpacityProps & {
   name: string;
   handleNew?: () => void;
+  type?: BackGroundTypeStyleProps;
 }
 
-export function HeaderNew({ name, handleNew, ...rest }: Props) {
+export function HeaderNew({ name, type='PRIMARY', handleNew, ...rest }: Props) {
   return (
-    <Container>
+    <Container type={type}>
       <AccessButton {...rest}
       onPress={handleNew}
       >

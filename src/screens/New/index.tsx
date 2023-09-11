@@ -14,6 +14,7 @@ import imgSuccess from '../../assets/image_message_success.png';
 import imgFail from '../../assets/image_message_fail.png'
 
 
+
 export function New() {
 
   const navigation = useNavigation()
@@ -193,6 +194,7 @@ export function New() {
             title='Cadastrar refeição'
             icon={false}
             onPress={handleRegisterNewMeal}
+            name='add'
             />
           </BoxButtom>
         </ScrollView>
@@ -224,6 +226,7 @@ export function New() {
           title='Ir para a página inicial'
           icon={false}
           onPress={goHome}
+          name='add'
         />
         </BoxButtom>
         </>

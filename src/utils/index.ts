@@ -1,4 +1,7 @@
 import { MealsSectionDTO } from "@dtos/Meal";
+import { getAllMeals } from "@storage/Meal/getAllMeals";
+import { useState } from "react";
+import { Alert } from "react-native";
 
 export function formatDate(text: string) {
   const cleanedText = text.replace(/\D/g, ''); // Remove caracteres não numéricos
@@ -107,6 +110,28 @@ export async function calcPercentMeal(mealsInSection: MealsSectionDTO[]) {
 
   } catch (error) {
     throw error;
+  }
+}
+
+export async function checkStoredDataShowMeal(dateTime: string) {
+  try {
+    const allMealsInSection = await getAllMeals();
+    const [dateParam, timeParam] = dateTime.split('-'); 
+    const matchingMeal = allMealsInSection.find(meal => {
+      return meal.data.some(item => item.date === dateParam && item.time === timeParam);
+    });
+
+    if (matchingMeal) {
+      const showMeal = matchingMeal.data.find(item => item.date === dateParam && item.time === timeParam);
+      return showMeal
+    }
+    
+  } catch (error) {
+    console.log(error);
+    return Alert.alert(
+      'Erro',
+      'Ocorreu um erro ao carregar as refeições. Por favor, feche o app e tente novamente.'
+    )
   }
 }
 
