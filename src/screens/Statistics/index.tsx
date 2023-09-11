@@ -3,8 +3,6 @@ import { ScrollView } from "react-native";
 import { HeaderStatistics } from "@components/Statistics/HeaderStatistics";
 import { PercentHome } from "@components/App/PercentHome";
 import { BoxStatistics, Container, Title } from "./styles";
-import { useState } from 'react';
-import { Loading } from '@components/App/Loading';
 
 type RouteParams = {
   statusPercent: number;
@@ -29,17 +27,10 @@ export function Statistics() {
   function handleDiet() {
     navigation.navigate('diet')
   }
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   
   return (
     <Container>
-      {
-        isLoading ?
-        <Loading/>
-        :
-        <>
-        <HeaderStatistics
+      <HeaderStatistics
         percent={statusPercent}
         handleDiet={handleDiet}
         status={statusPercent < 60 ? false : true}
@@ -72,8 +63,6 @@ export function Statistics() {
             />
           </BoxStatistics>
         </ScrollView>
-        </>
-      }
     </Container>
   )
 

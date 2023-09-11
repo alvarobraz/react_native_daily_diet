@@ -6,12 +6,13 @@ import { BoxHalfInput, BoxTopInput, Container, HalfInput, Title, BoxButtom, BoxM
 import { Input } from '@components/App/Input';
 import { ButtomMeal } from '@components/App/ButtomMeal';
 import { Buttom } from '@components/App/Buttom';
-import { MealStorageDTO, MealsSectionDTO } from '@dtos/Meal';
-import { checkStoredDataShowMeal, formatDate, formatTime } from '@utils/index';
+import { MealStorageDTO } from '@dtos/Meal';
+import { checkStoredDataShowMeal, combineDataMeals, errorHandler, formatDate, formatTime, removeDataMeal } from '@utils/index';
 import { mealCreate } from '@storage/Meal/mealCreate';
 import { getAllMeals } from '@storage/Meal/getAllMeals';
 import imgSuccess from '../../assets/image_message_success.png';
 import imgFail from '../../assets/image_message_fail.png'
+import { Loading } from '@components/App/Loading';
 
 type RouteParams = {
   dateTime?: string;
@@ -23,8 +24,6 @@ export function New() {
   const route = useRoute()
   const { dateTime } = route.params as RouteParams
 
-  console.log(dateTime)
-
   function handleNew() {
     navigation.navigate('diet')
   }
@@ -35,13 +34,11 @@ export function New() {
   const [mealTime, setMealTime] = useState<string>();
   const [isInsideTheDiet, setIsInsideTheDiet] = useState<boolean>(true);
   const [radioClicked, setRadioClicked] = useState('TERTIARY');
-  const [Meals, setMeals] = useState<MealsSectionDTO[]>([]);
   const [isCreated, setIsCreated] = useState<boolean>(false);
   const [result, setResult] = useState<boolean>();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [meal, setMeal] = useState<MealStorageDTO | undefined>();
-
 
   function handleIsInsideTheDiet(status: boolean, clicked: string) {
     status === true ? setIsInsideTheDiet(true) : setIsInsideTheDiet(false)
@@ -70,28 +67,23 @@ export function New() {
         data: [newMeal],
       }
 
-
-      const storedDatMeals = await getAllMeals()
-      const existingMeals  = storedDatMeals ? storedDatMeals : [];
-      const combinedMeals  = [...existingMeals, dataNewMeal];
-
-      const groupedMeals = combinedMeals.reduce((meals, newMeal) => {
-        const existingGroup = meals.find((meal: MealsSectionDTO) => meal.title === newMeal.title);
-        if (existingGroup) {
-          existingGroup.data.push(...newMeal.data);
-        } else {
-          meals.push({ title: newMeal.title, data: newMeal.data });
-        }
-        return meals;
-      }, [] as MealsSectionDTO[]);
-
-      const mealsJSON = JSON.stringify(groupedMeals);
+      const storedDatMeals     = await getAllMeals()
+      const allMealsInSection  = storedDatMeals ? storedDatMeals : [];
+      const existDataMeal = await errorHandler(mealDate, mealTime, allMealsInSection)
+      if(existDataMeal === true) {
+        return Alert.alert(
+          'Erro',
+          'Já existe um registro com a mesma data e hora.'
+        )
+      }
+      
+      const groupedMeals       = await combineDataMeals(allMealsInSection, dataNewMeal)
+      const mealsJSON          = JSON.stringify(groupedMeals);
       await mealCreate(mealsJSON)
 
       const storedDataNewMeals = await getAllMeals()
       const getResult = storedDataNewMeals.some(meal => meal.data.some(item => item.isInsideTheDiet === false));
       
-
       setResult(getResult)
       setIsCreated(true)
       setMealName('');
@@ -127,6 +119,7 @@ export function New() {
   async function handleEditMeal() {
 
     if(meal !== undefined) {
+
       const editMeal = {
         name: mealName ? mealName : meal.name,
         description: mealDescription ? mealDescription : meal.description,
@@ -159,38 +152,18 @@ export function New() {
           const mealDateNew = mealDate ? mealDate : date;
           const mealTimeNew = mealTime ? mealTime : time;
          
-          // tratamento de erro
           if(mealDate !== undefined || mealTime !== undefined) {
-            const sectionIndexExistsDate = allMealsInSection.findIndex(item => item.title === mealDateNew);         
-            if(sectionIndexExistsDate !== -1) {
-              
-              const dataIndexExistsDate = allMealsInSection[sectionIndexExistsDate].data.findIndex(item => {
-                return item.date == mealDateNew && item.time == mealTimeNew;
-              });
-
-              if(dataIndexExistsDate !== -1) {
-                return Alert.alert(
-                  'Erro',
-                  'Já existe um registro com a mesma data e hora.'
-                )
-              }
+            const existDataMeal = await errorHandler(mealDateNew, mealTimeNew, allMealsInSection)
+            if(existDataMeal === true) {
+              return Alert.alert(
+                'Erro',
+                'Já existe um registro com a mesma data e hora.'
+              )
             }
           }
           
+          await removeDataMeal(allMealsInSection, date, time)
 
-          // Lógica para remover index que será atualizado
-          const dataSectionIndex = allMealsInSection.findIndex(item => {
-            return item.data.some(meal => meal.date === date && meal.time === time);
-          });
-
-          if (dataSectionIndex !== -1) {
-            const mealIndexToRemove = allMealsInSection[dataSectionIndex].data.findIndex(meal => meal.date === date && meal.time === time);
-            
-            if (mealIndexToRemove !== -1) {
-              allMealsInSection[dataSectionIndex].data.splice(mealIndexToRemove, 1);
-            }
-          }
-          
           const newSectionIndex = {
             title: mealDateNew,
             data: [
@@ -198,28 +171,16 @@ export function New() {
             ]
           }
 
-          const combinedMeals  = [...allMealsInSection, newSectionIndex];
-
-          const groupedMeals = combinedMeals.reduce((meals, newMeal) => {
-            const existingGroup = meals.find((meal: MealsSectionDTO) => meal.title === newMeal.title);
-            if (existingGroup) {
-              existingGroup.data.push(...newMeal.data);
-            } else {
-              meals.push({ title: newMeal.title, data: newMeal.data });
-            }
-            return meals;
-          }, [] as MealsSectionDTO[]);
-
+          const groupedMeals = await combineDataMeals(allMealsInSection, newSectionIndex)
           const filteredMeals = groupedMeals.filter(item => item.data.length > 0);
           const mealsJSON = JSON.stringify(filteredMeals);
           await mealCreate(mealsJSON)
+
           navigation.navigate('diet');
         }
       }
     }
   }
-
- 
 
   useEffect(()=>{
     if(dateTime !== undefined) {
@@ -230,6 +191,9 @@ export function New() {
   return (
     <Container>
       {
+        isLoading ?
+        <Loading/>
+        :
         !isCreated ?
         <>
         <HeaderNew

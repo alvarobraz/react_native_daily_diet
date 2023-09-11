@@ -1,6 +1,5 @@
-import { MealsSectionDTO } from "@dtos/Meal";
+import { MealStorageDTO, MealsSectionDTO } from "@dtos/Meal";
 import { getAllMeals } from "@storage/Meal/getAllMeals";
-import { useState } from "react";
 import { Alert } from "react-native";
 
 export function formatDate(text: string) {
@@ -133,5 +132,63 @@ export async function checkStoredDataShowMeal(dateTime: string) {
       'Ocorreu um erro ao carregar as refeições. Por favor, feche o app e tente novamente.'
     )
   }
+}
+
+export function sortDataMeals(allMealsInSection: MealsSectionDTO[]) {
+
+  return allMealsInSection.sort((a, b) => {
+    const titleA = a.title.toLowerCase();
+    const titleB = b.title.toLowerCase();
+  
+    if (titleA < titleB) return -1;
+    if (titleA > titleB) return 1;
+    return 0;
+  });
+
+}
+
+export async function errorHandler(mealDateNew:string, mealTimeNew: string, allMealsInSection: MealsSectionDTO[]) {
+  const sectionIndexExistsDate = allMealsInSection.findIndex(item => item.title === mealDateNew);         
+  if(sectionIndexExistsDate !== -1) {
+    
+    const dataIndexExistsDate = allMealsInSection[sectionIndexExistsDate].data.findIndex(item => {
+      return item.date == mealDateNew && item.time == mealTimeNew;
+    });
+
+    if(dataIndexExistsDate !== -1) {
+      return true
+    }
+  }
+}
+
+export async function removeDataMeal(allMealsInSection: MealsSectionDTO[], date: string, time: string) {
+  const dataSectionIndex = allMealsInSection.findIndex(item => {
+    return item.data.some(meal => meal.date === date && meal.time === time);
+  });
+
+  if (dataSectionIndex !== -1) {
+    const mealIndexToRemove = allMealsInSection[dataSectionIndex].data.findIndex(meal => meal.date === date && meal.time === time);
+    
+    if (mealIndexToRemove !== -1) {
+      return allMealsInSection[dataSectionIndex].data.splice(mealIndexToRemove, 1);
+    }
+  }
+
+  return allMealsInSection
+}
+
+export async function combineDataMeals(allMealsInSection: MealsSectionDTO[], newSectionIndex: MealsSectionDTO) {
+
+  const combinedMeals  = [...allMealsInSection, newSectionIndex];
+
+  return combinedMeals.reduce((meals, newMeal) => {
+    const existingGroup = meals.find((meal: MealsSectionDTO) => meal.title === newMeal.title);
+    if (existingGroup) {
+      existingGroup.data.push(...newMeal.data);
+    } else {
+      meals.push({ title: newMeal.title, data: newMeal.data });
+    }
+    return meals;
+  }, [] as MealsSectionDTO[]);
 }
 

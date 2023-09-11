@@ -9,8 +9,7 @@ import { useCallback, useState } from 'react';
 import { MealsSectionDTO } from '@dtos/Meal';
 import { getAllMeals } from '@storage/Meal/getAllMeals';
 import { Loading } from '@components/App/Loading';
-import { calcPercentMeal } from '@utils/index';
-import { clearMealCollection } from '@storage/Meal/removeMeal';
+import { calcPercentMeal, sortDataMeals } from '@utils/index';
 
 export function Diet() {
 
@@ -31,19 +30,12 @@ export function Diet() {
   async function checkStoredDataMeal() {
 		try {
 			setIsLoading(true);
-			const allMealsInSection = await getAllMeals();
 
-      allMealsInSection.sort((a, b) => {
-        const titleA = a.title.toLowerCase();
-        const titleB = b.title.toLowerCase();
-      
-        if (titleA < titleB) return -1;
-        if (titleA > titleB) return 1;
-        return 0;
-      });
-      
-			setMealsInSection(allMealsInSection);
-      const percentages = await calcPercentMeal(allMealsInSection)
+			const allMealsInSection       = await getAllMeals();
+      const allMealsInSectionSorted = sortDataMeals(allMealsInSection)
+			setMealsInSection(allMealsInSectionSorted);
+
+      const percentages = await calcPercentMeal(allMealsInSectionSorted)
       setStatusPercent(percentages.statusPercent)
       setTotalMealsRegister(percentages.totalMealsRegister)
       setMaxSequence(percentages.maxSequence)
@@ -73,10 +65,7 @@ export function Diet() {
   
   useFocusEffect(useCallback(() => {
 		checkStoredDataMeal() 
-    // clearMealCollection()
 	}, []));
-
-  // console.log(statusPercent)
 
   return (
     <Container>

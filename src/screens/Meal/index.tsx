@@ -7,7 +7,7 @@ import { Buttom } from '@components/App/Buttom';
 import { useCallback, useState } from 'react';
 import { MealStorageDTO } from '@dtos/Meal';
 import { Loading } from '@components/App/Loading';
-import { checkStoredDataShowMeal } from '@utils/index';
+import { checkStoredDataShowMeal, removeDataMeal } from '@utils/index';
 import { getAllMeals } from '@storage/Meal/getAllMeals';
 import { mealCreate } from '@storage/Meal/mealCreate';
 
@@ -41,45 +41,29 @@ export function Meal() {
 
   const [isModalVisible, setModalVisible] = useState(false);
 
-  // Função para mostrar o modal
   const showModal = () => {
     setModalVisible(true);
   };
 
-  // Função para ocultar o modal
   const hideModal = () => {
     setModalVisible(false);
   };
 
-  // Função para excluir o dado
   async function handleDelete() {
 
     const allMealsInSection = await getAllMeals();
-    const [date, time] = dateTime.split('-')
+    const [date, time]      = dateTime.split('-')
 
-    const dataSectionIndex = allMealsInSection.findIndex(item => {
-      return item.data.some(meal => meal.date === date && meal.time === time);
-    });
+    await removeDataMeal(allMealsInSection, date, time)
 
-    if (dataSectionIndex !== -1) {
-      const mealIndexToRemove = allMealsInSection[dataSectionIndex].data.findIndex(meal => meal.date === date && meal.time === time);
-      
-      if (mealIndexToRemove !== -1) {
-        allMealsInSection[dataSectionIndex].data.splice(mealIndexToRemove, 1);
-      }
-    }
-
-    // const [date, time] = dateTime.split('-')
-
-    // const filteredMeals = allMealsInSection.filter(item => item.data.filter(meal => meal.date === date && meal.time === time));
-    const mealsJSON = JSON.stringify(allMealsInSection);
+    const filteredMeals = allMealsInSection.filter(item => item.data.length > 0);
+    const mealsJSON     = JSON.stringify(filteredMeals);
     await mealCreate(mealsJSON)
     navigation.navigate('diet');
   };
 
   useFocusEffect(useCallback(() => {
     getShowMeal(dateTime)
-    // clearMealCollection()
 	}, [dateTime]));
 
   return (
